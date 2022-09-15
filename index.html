@@ -506,6 +506,12 @@ Author URL: http://w3layouts.com
 
                 </div>
                 <div class="col-lg-7 mt-lg-0 mt-md-5 mt-4">
+                  <div class="alert alert-success alert-dismissible fade show my-alert d-none" role="alert">
+                    <strong>Terima Kasih!</strong> Pesan anda sudah kami terima.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
                     <form name="gms-contact-form">
                         <div class="twice-two">
                             <input type="text" class="form-control" name="nama" id="w3lName" placeholder="Nama"
@@ -520,7 +526,11 @@ Author URL: http://w3layouts.com
                         <textarea name="pesan" class="form-control" id="w3lMessage" placeholder="Pesan"
                             required=""></textarea>
                         <div class="text-right">
-                            <button type="submit" class="btn btn-secondary btn-style mt-4">Kirim</button>
+                            <button type="submit" class="btn btn-secondary btn-style mt-4 btn-kirim">Kirim</button>
+                            <button class="btn btn-secondary btn-style mt-4 btn-loading d-none" type="button" disabled>
+                              <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                              Loading...
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -736,13 +746,27 @@ Author URL: http://w3layouts.com
 <script>
   const scriptURL = 'https://script.google.com/macros/s/AKfycbz9JJnzb_bYiS09fK96iLWOxNQeKpbnTiU_SPSgXwE91ztlrzmUyoF3K9RP-ctrfiFh/exec'
   const form = document.forms['gms-contact-form']
+  const btnKirim = document.querySelector('.btn-kirim');
+  const btnLoading = document.querySelector('.btn-loading');
+  const myAlert = document.querySelector('.my-alert');
 
   form.addEventListener('submit', e => {
     e.preventDefault()
+    // ketika timbol submit diklick
+    // tampilkan tombol loading, hilangkan tombol kirim
+    btnLoading.classList.toggle('d-none');
+    btnKirim.classList.toggle('d-none');
     fetch(scriptURL, { method: 'POST', body: new FormData(form)})
-      .then(response => console.log('Success!', response))
-      .catch(error => console.error('Error!', error.message))
-  })
+    .then(response => {
+      // tampilkan tombol kirim, hilangkan tombol loading
+        btnLoading.classList.toggle('d-none');
+        btnKirim.classList.toggle('d-none');
+        //tampilkan alert
+        myAlert.classList.toggle('d-none');
+        console.log('Success!', response);
+      })
+      .catch(error => console.error('Error!', error.message));
+  });
 </script>
 <!-- //Kirim Pesan Kontak -->
 
